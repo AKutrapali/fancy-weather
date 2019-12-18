@@ -1,1 +1,1 @@
-https://AKutrapali.github.io/fancy-weather
+# webpack-boilerplate

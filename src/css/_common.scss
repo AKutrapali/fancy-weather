@@ -1,0 +1,79 @@
+$margin: 0 auto;
+$orange: rgb(175, 122, 22);
+%flex_line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+%flex_column {
+  @extend %flex_line;
+  flex-direction: column;
+}
+
+@mixin gray_block {
+  background-color:rgb(61, 61, 61);
+  color: white;
+  border: 2px solid $orange;
+  border-radius: 10px;
+  text-align: center;
+  padding: 7px;
+  
+}
+
+@mixin hover {
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+}
+
+@mixin flex_line () {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin flex_column () {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+@font-face {
+  font-family: 'FuturaMediumC';
+  src: url('../assets/fonts/futuramediumc.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+body,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;  
+}
+
+.wrapper {
+  position: relative;
+  max-width: 1000px;
+  margin: $margin;
+  background-color: grey;
+  height: 100vh;
+  font-family: 'FuturaMediumC';
+  font-size: 18px;
+  
+}
+
+@media screen and (max-width: 530px) {
+  .wrapper {
+   
+    height: auto;
+   
+  }
+}
