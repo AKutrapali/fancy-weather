@@ -1,5 +1,7 @@
+
 import '../css/style.css';
 import '../css/style.scss';
+
 
 const wrapper = document.createElement('div');
 wrapper.className = 'wrapper';
@@ -20,14 +22,42 @@ reloadButton.style.fontWeight = 'bold';
 buttons.append(reloadButton);
 
 const temperatureButton = document.createElement('div');
-temperatureButton.className = 'button';
-temperatureButton.innerText = '*C/*F';
+temperatureButton.className = 'radio_button_container';
 buttons.append(temperatureButton);
 
+const celsiusButton = document.createElement('div');
+celsiusButton.className = 'button';
+celsiusButton.id = 'celsiusButton';
+celsiusButton.innerText = '\u00B0 C';
+temperatureButton.append(celsiusButton);
+
+const fahrenheitButton = document.createElement('div');
+fahrenheitButton.className = 'button';
+fahrenheitButton.id = 'celsiusButton';
+fahrenheitButton.innerText = '\u00B0 F';
+temperatureButton.append(fahrenheitButton);
+
 const langueButton = document.createElement('div');
-langueButton.className = 'button';
-langueButton.innerText = 'Eng';
+langueButton.className = 'radio_button_container';
 buttons.append(langueButton);
+
+const ruButton = document.createElement('div');
+ruButton.className = 'button';
+ruButton.id = 'ruButton';
+ruButton.innerText = 'Ру';
+langueButton.append(ruButton);
+
+const belButton = document.createElement('div');
+belButton.className = 'button';
+belButton.id = 'belButton';
+belButton.innerText = 'Бел';
+langueButton.append(belButton);
+
+const engButton = document.createElement('div');
+engButton.className = 'button';
+engButton.id = 'engButton';
+engButton.innerText = 'Eng';
+langueButton.append(engButton);
 
 const inputCityBlock = document.createElement('div');
 inputCityBlock.className = 'input_city_block';
@@ -150,7 +180,7 @@ const buttonCityText = ['Поиск', 'Шукаць', 'Search'];
 buttonCity.innerText = buttonCityText[langue];
 
 async function getLinkBackImage() {
-  const url = `https://api.unsplash.com/photos/random?query=town,${dayNight},${timeOfYear},${descriptionWeather}&client_id=9c3230614940bfbaeed09605f3b758cee051f9ece0bfec464e0e9d490d60be10`;
+  const url = `https://api.unsplash.com/photos/random?query=town,${city},${dayNight},${timeOfYear},${descriptionWeather}&client_id=9c3230614940bfbaeed09605f3b758cee051f9ece0bfec464e0e9d490d60be10`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
@@ -178,7 +208,7 @@ function showCityName() {
 
 function showMapAndCoordinates() {
   map.src = `https://www.openstreetmap.org/export/embed.html?bbox=${crd.longitude * 0.999}%2C${crd.latitude * 0.999}%2C${crd.longitude * 1.001}%2C${crd.latitude * 1.001}&amp;layer=mapnik&amp;marker=${crd.latitude}%2C${crd.longitude}`;
-  mapCoordinates.innerText = `${coordText[0][langue] + (crd.latitude).toFixed(4)}\r\n${coordText[1][langue]}${(crd.longitude).toFixed(4)}`;
+  mapCoordinates.innerText = `${coordText[0][langue] + (crd.latitude).toFixed(4)}\u00B0\r\n${coordText[1][langue]}${(crd.longitude).toFixed(4)}\u00B0`;
 }
 
 function getUserCoordinates(resolve) {
@@ -191,7 +221,7 @@ function getUserCoordinates(resolve) {
 }
 
 function getDate() {
-  const daysWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const daysWeek = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье'];
   const date = new Date();
   const options = {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric',
@@ -219,7 +249,7 @@ function temperatureBlockFilling() {
   let srcSvg;
   const tempTodayText = [
     ['Температура сейчас: ', 'Цемпература зараз: ', 'temperature now: '],
-    ['Описание: ', 'Апісанне: ', 'Description: '],
+    ['Описание: ', 'Апісанне: ', 'description: '],
     ['Температура днем: ', 'Цемпература днем: ', 'temperature the day: '],
     ['Температура ночью: ', 'Цемпература ноччу: ', 'temperature at night: '],
     ['Ощущаемая температура: ', 'Адчуваемая цемпература: ', 'perceived temperature: '],
@@ -231,9 +261,9 @@ function temperatureBlockFilling() {
   }
 
   function conversionCelForr(temp) {
-    if (celsiusForrengate === 'celsius') return `${temp}*C`;
+    if (celsiusForrengate === 'celsius') return `${temp} \u00B0 C`;
     const forr = ((temp * 1.8) + 32).toFixed(2);
-    return `${forr}*F`;
+    return `${forr}\u00B0 F`;
   }
 
   function choiceSvg(n) {
@@ -246,10 +276,10 @@ function temperatureBlockFilling() {
 
   searchPlaceInList();
   const dayWeeks = [
-    ['Пн', 'Пан', 'Mon'],
+    ['Пн', 'Пнд', 'Mon'],
     ['Вт', 'Аут', 'Tu'],
-    ['Ср', 'Ср', 'We'],
-    ['Чт', 'Чат', 'Th'],
+    ['Ср', 'Сер', 'We'],
+    ['Чт', 'Чцв', 'Th'],
     ['Пт', 'Пят', 'Fr'],
     ['Сб', 'Суб', 'Sa'],
     ['Вс', 'Няд', 'Su'],
@@ -294,64 +324,9 @@ function showDetailsFutureTemperatureBlock() {
 }
 
 function DrawingToBackImage() {
-  const linkToImage = `${dataImage.urls.small}`;
+  const linkToImage = `${dataImage.urls.full}`;
   wrapper.style.background = `url(${linkToImage}) no-repeat center center fixed`;
   wrapper.style.backgroundSize = 'cover';
-}
-
-function jumpingButtons() {
-  // eslint-disable-next-line no-restricted-globals
-  const { target } = event;
-  target.style.position = 'absolute';
-  target.style.width = '8%';
-  const height = wrapper.clientHeight - target.clientHeight;
-  const width = 700 * Math.random();
-
-  function makeEaseOut(timing) {
-    return function (timeFraction) {
-      return 1 - timing(1 - timeFraction);
-    };
-  }
-
-  function bounce(timeFraction) {
-    for (let a = 0, b = 1; 1; a += b, b /= 2) {
-      if (timeFraction >= (7 - 4 * a) / 11) {
-        return -(((11 - 6 * a - 11 * timeFraction) / 4) ** 2) + (b ** 2);
-      }
-    }
-  }
-
-  function quad(timeFraction) {
-    return (timeFraction ** 2);
-  }
-
-  function animate({ timing, draw, duration }) {
-    const start = performance.now();
-    // eslint-disable-next-line no-shadow
-    requestAnimationFrame(function animate(time) {
-      let timeFraction = (time - start) / duration;
-      if (timeFraction > 1) timeFraction = 1;
-      const progress = timing(timeFraction);
-      draw(progress);
-      if (timeFraction < 1) requestAnimationFrame(animate);
-    });
-  }
-
-  animate({
-    duration: 2000,
-    timing: makeEaseOut(bounce),
-    draw(progress) {
-      target.style.top = `${height * progress}px`;
-    },
-  });
-
-  animate({
-    duration: 2000,
-    timing: makeEaseOut(quad),
-    draw(progress) {
-      target.style.left = `${width * progress}px`;
-    },
-  });
 }
 
 // eslint-disable-next-line
@@ -420,13 +395,17 @@ buttonCity.onclick = function () {
   load();
 };
 
-langueButton.onclick = function () {
+langueButton.onclick = function (event) {
+  ruButton.style.color = 'gray';
+  belButton.style.color = 'gray';
+  engButton.style.color = 'gray';
+  event.target.style.color = "white";
   const langueTexts = ['Рус', 'Бел', 'Eng'];
-  langue += 1;
-  if (langue === 3) langue = 0;
+  if (event.target === ruButton) langue = 0;
+  if (event.target === belButton) langue = 1;
+  if (event.target === engButton) langue = 2;
   localStorage.removeItem('langue');
   localStorage.setItem('langue', langue);
-  langueButton.innerText = langueTexts[langue];
   buttonCity.innerText = buttonCityText[langue];
   mapCoordinates.innerText = `${coordText[0][langue] + crd.latitude}\r\n${coordText[1][langue]}${crd.longitude}`;
   async function intermediateFunction() {
@@ -438,6 +417,22 @@ langueButton.onclick = function () {
   intermediateFunction();
   getDate();
   showDetailsFutureTemperatureBlock();
+};
+
+celsiusButton.onclick = function () {
+  fahrenheitButton.style.color = 'gray';
+  celsiusButton.style.color = 'white';
+  celsiusForrengate = 'forrengate';
+  localStorage.setItem('celsiusForrengate', celsiusForrengate);
+  temperatureBlockFilling();
+};
+
+fahrenheitButton.onclick = function () {
+  fahrenheitButton.style.color = 'white';
+  celsiusButton.style.color = 'gray';
+  celsiusForrengate = 'celsius';
+  localStorage.setItem('celsiusForrengate', celsiusForrengate);
+  temperatureBlockFilling();
 };
 
 temperatureButton.onclick = function () {
@@ -457,8 +452,6 @@ reloadButton.onclick = function () {
   }
   qw();
 };
-
-buttons.onclick = jumpingButtons;
 
 temperatureFutureBlock.onclick = function () {
   futureBlockInDetail.style.display = 'flex';
