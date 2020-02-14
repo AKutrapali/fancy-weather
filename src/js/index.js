@@ -162,12 +162,10 @@ let dataCity;
 let dataWeather;
 let dataImage;
 let city = 'minsk';
-let langue = Number(localStorage.getItem('langue'));
+let langue = Number(localStorage.getItem('langue')) || 0;
 let celsiusForrengate = localStorage.getItem('celsiusForrengate');
 const crd = {};
 let descriptionWeather = '';
-let dayNight = '';
-let timeOfYear = '';
 let hours;
 let dayWeek;
 const langueText = ['ru', 'by', 'en'];
@@ -180,7 +178,7 @@ const buttonCityText = ['Поиск', 'Шукаць', 'Search'];
 buttonCity.innerText = buttonCityText[langue];
 
 async function getLinkBackImage() {
-  const url = `https://api.unsplash.com/photos/random?query=town,${city},${dayNight},${timeOfYear},${descriptionWeather}&client_id=9c3230614940bfbaeed09605f3b758cee051f9ece0bfec464e0e9d490d60be10`;
+  const url = `https://api.unsplash.com/photos/random?query=town,${city},${descriptionWeather}&client_id=9c3230614940bfbaeed09605f3b758cee051f9ece0bfec464e0e9d490d60be10`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
@@ -232,16 +230,6 @@ function getDate() {
   const dayWeekName = date.toLocaleString(`${langueText[langue]}-${langueText[langue]}`, { weekday: 'long', timeZone: `${dataCity.results[0].annotations.timezone.name}` });
   dayWeek = (daysWeek.indexOf(dayWeekName)) + 1;
   dateBlock.innerHTML = dateDisplay;
-  if (date.getHours() < 17 && date.getHours() > 8) {
-    dayNight = 'day';
-  } else {
-    dayNight = 'night';
-  }
-  if (date.getMonth() === 10 || date.getMonth() === 11 || date.getMonth() === 0 || date.getMonth() === 1) {
-    timeOfYear = 'winter';
-  } else {
-    timeOfYear = 'summer';
-  }
 }
 
 function temperatureBlockFilling() {
@@ -344,7 +332,7 @@ function testSpeech() {
   const speechRecognitionList = new SpeechGrammarList();
   speechRecognitionList.addFromString(grammar, 1);
   recognition.grammars = speechRecognitionList;
-  recognition.lang = 'en-US';
+  recognition.lang = 'en';
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
 
@@ -365,17 +353,18 @@ function testSpeech() {
 
 buttonMicrophone.addEventListener('click', testSpeech);
 
-async function fullLoad() {
+function fullLoad() {
   new Promise(getUserCoordinates)
-    .then(showMapAndCoordinates);
-  dataCity = await getEncodingCity();
-  showCityName();
-  getDate();
-  dataWeather = await getDataWeather();
-  temperatureBlockFilling();
-  dataImage = await getLinkBackImage();
-  DrawingToBackImage();
-  setInterval(getDate, 30000);
+    .then(showMapAndCoordinates)
+    .then (async function () {
+      dataCity = await getEncodingCity();
+      showCityName();
+      getDate();
+      dataWeather = await getDataWeather();
+      temperatureBlockFilling();
+      dataImage = await getLinkBackImage();
+      DrawingToBackImage();
+      setInterval(getDate, 30000);})
 }
 
 fullLoad();
@@ -399,15 +388,15 @@ langueButton.onclick = function (event) {
   ruButton.style.color = 'gray';
   belButton.style.color = 'gray';
   engButton.style.color = 'gray';
+  // eslint-disable-next-line no-param-reassign
   event.target.style.color = "white";
-  const langueTexts = ['Рус', 'Бел', 'Eng'];
   if (event.target === ruButton) langue = 0;
   if (event.target === belButton) langue = 1;
   if (event.target === engButton) langue = 2;
   localStorage.removeItem('langue');
   localStorage.setItem('langue', langue);
   buttonCity.innerText = buttonCityText[langue];
-  mapCoordinates.innerText = `${coordText[0][langue] + crd.latitude}\r\n${coordText[1][langue]}${crd.longitude}`;
+  mapCoordinates.innerText = `${coordText[0][langue] + crd.latitude.toFixed(4)}\r\n${coordText[1][langue]}${crd.longitude.toFixed(4)}`;
   async function intermediateFunction() {
     dataCity = await getEncodingCity();
     showCityName();
@@ -462,4 +451,3 @@ futureBlockInDetail.onclick = function () {
   futureBlockInDetail.style.display = 'none';
   futureBlockInDetail.innerText = '';
 };
-
