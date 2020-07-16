@@ -1,1 +1,1 @@
-https://AKutrapali.github.io/fancy-weather
+https://AlexK321.github.io/fancy-weather
